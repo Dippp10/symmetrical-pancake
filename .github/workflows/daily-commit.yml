@@ -1,0 +1,35 @@
+name: Daily Million Goal
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs once every day at midnight UTC
+  workflow_dispatch:      # Allows you to trigger it manually for testing
+
+jobs:
+  make-contributions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate 2740 Commits
+        run: |
+          # Configure git with your details
+          git config --local user.email "deepikakarthik697@gmail.com"
+          git config --local user.name "Dippp10"
+          
+          # Loop to create 2740 unique commits
+          for i in {1..2740}
+          do
+            echo "Contribution $i on $(date)" >> contribution_log.txt
+            git add contribution_log.txt
+            git commit -m "Automated contribution $i of 2740"
+          done
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
